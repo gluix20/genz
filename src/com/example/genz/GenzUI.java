@@ -30,6 +30,8 @@ public class GenzUI extends UI implements ClickListener{
 	TextField b;
 	TextField c;
 	
+	int clicks=0;
+	
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = GenzUI.class)
@@ -50,14 +52,14 @@ public class GenzUI extends UI implements ClickListener{
 		correlativo = new TextField("Correlativo");
 		layout.addComponent(correlativo);
 		
-		a = new TextField("A:");
-		layout.addComponent(a);
+		//a = new TextField("A:");
+		//layout.addComponent(a);
 		
-		b = new TextField("B:");
-		layout.addComponent(b);
+		//b = new TextField("B:");
+		//layout.addComponent(b);
 		
-		c = new TextField("C:");
-		layout.addComponent(c);
+		//c = new TextField("C:");
+		//layout.addComponent(c);
 		
 		Button button = new Button("Calcular");
 		button.addClickListener(this);
@@ -66,14 +68,17 @@ public class GenzUI extends UI implements ClickListener{
 
 	@Override
 	public void buttonClick(ClickEvent event) {
-		layout.addComponent(new Label("Son "+kwh.getValue()+" kWh"));
+		clicks++;
+		//layout.addComponent(new Label("Son "+kwh.getValue()+" kWh"));
 		String content = null;
 		URLConnection connection = null;
 		try {
 		  connection =  new URL("http://www.eegsa.com/saldosyfacturas/factura/dofact.php?el=f&correlativo="+correlativo.getValue()).openConnection();
 		  Scanner scanner = new Scanner(connection.getInputStream());
+		  System.out.println(connection.getInputStream());
 		  scanner.useDelimiter("\\Z");
 		  content = scanner.next();
+		  scanner.close();
 		}catch ( Exception ex ) {
 		    ex.printStackTrace();
 		    
@@ -91,11 +96,19 @@ public class GenzUI extends UI implements ClickListener{
 			i++;
 		}
 		
+		int promedio=0;
 		for (int j : valores) {
-			layout.addComponent(new Label(""+j));
+			promedio=promedio+j;
+			
 		}
+		promedio=promedio/6;
 		
-		layout.addComponent(new Label(""+(Integer.parseInt(a.getValue())+Integer.parseInt(b.getValue()))));
+		
+		if (clicks>1){
+			layout.removeComponent(layout.getComponent(layout.getComponentCount()-1));			
+		}		
+		layout.addComponent(new Label("Consumo promedio de: "+promedio+" kWh"));
+		
 	}
 
 	
