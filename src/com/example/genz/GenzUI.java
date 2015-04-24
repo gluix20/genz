@@ -17,6 +17,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -28,6 +29,8 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("genz")
 public class GenzUI extends UI implements ClickListener{
 	VerticalLayout layout;
+	HorizontalLayout hlayout;
+	
 	TextField kwh;
 	TextField correlativo;
 	TextField tf_nombre;
@@ -70,14 +73,25 @@ public class GenzUI extends UI implements ClickListener{
 		tf_nombre.setWidth("400px");
 		layout.addComponent(tf_nombre);
 		
-			
+		hlayout = new HorizontalLayout();
+		hlayout.setSpacing(true);
+		hlayout.setMargin(true);
+		
+		layout.addComponent(hlayout);
+		
 		Button button = new Button("Calcular");
 		button.addClickListener(this);
-		layout.addComponent(button);
+		hlayout.addComponent(button);
+		
+		Button bt_pdf = new Button("PDF");
+		bt_pdf.addClickListener(this);
+		hlayout.addComponent(bt_pdf);
 	}
 
 	@Override
 	public void buttonClick(ClickEvent event) {
+		
+		
 		clicks++;
 		//layout.addComponent(new Label("Son "+kwh.getValue()+" kWh"));
 		String content = null;
@@ -126,6 +140,9 @@ public class GenzUI extends UI implements ClickListener{
 		tf_nombre.setValue(nombre);
 		layout.addComponent(new Label("Consumo promedio de: "+promedio+" kWh"));
 		
+		
+		String texto = "Nombre: "+nombre+" \r\nConsumo promedio de: "+promedio+" kWh";
+		//PDFWithText pdf = new PDFWithText(texto);
 	}
 
 	
